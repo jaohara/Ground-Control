@@ -1,0 +1,15 @@
+﻿<Properties StartupItem="Assembly-CSharp.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/EnemySpawnerIdea.cs">
+    <Files>
+      <File FileName="Assets/Scripts/InputController.cs" Line="132" Column="1" />
+      <File FileName="Assets/Scripts/EnemyNavigator.cs" Line="82" Column="68" />
+      <File FileName="Assets/Scripts/GCInterfaces.cs" Line="28" Column="45" />
+      <File FileName="Assets/Scripts/EnemySpawnerIdea.cs" Line="66" Column="41" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

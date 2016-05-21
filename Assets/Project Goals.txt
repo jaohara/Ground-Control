@@ -1,0 +1,33 @@
+﻿Ground Control Goals and Objectives Scratchpad
+==============================================
+
+
+
+InputController Class:
+	+ Provide strings for inputs that are used
+		- IE string jump = "Jump"; // corresponds to button used in Input Manager
+
+	- Condense all of the input checks from other scripts
+		- CheckName (CurrentController) 	-> reports to NewController
+
+		+ JumpCheck (PlayerController) 		-> reports to PlayerController
+		+ MoveCheck (PlayerController) 		-> reports to PlayerController
+		+ ShieldCheck (PlayerController?) 	-> reports to ShieldController
+		+ LookCheck (GunController) 		-> reports to GunController
+		+ ShootCheck (Guncontroller) 		-> reports to GunController
+		+ BombCheck (***New***) 			-> reports to GunController? BombController?  WeaponController?
+		- PauseCheck (***New***)			-> reports to GameController
+		+ SpawnCheck (GameController)		-> reports to GameController and PlayerController?
+
+GunController Class:
+	+ Why does the first shot on spawn float in the air with no velocity?
+		- I think it is related to an object being instantiated before all of other variables
+		are assigned a value. I solved this by having a slight delay before the player can 
+		fire in start. (5/9/16)
+
+General UI:
+	- Make a Local Player UI for little notifications (damage, pickups collected, etc)
+	- Make local health bars/bomb or recharge meters?
+
+----
+

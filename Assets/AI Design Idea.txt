@@ -1,0 +1,15 @@
+AI Design for Ground Control
+----------------------------
+
+I'm going to need to suss out some ideas for how my main game AI will work so I 
+can fully visualize it. 
+
+First thing's first, I'm going to make a "spawn impulse" button, let's 
+say that this is going to be something like "i" for right now. When
+I press this, the spawner is manually going to carry out one step 
+of what it will automate: spawning an enemy.
+
+Before I program it with the enemy, I'm going to need it to calculate where
+to plot the enemy path. To represent this in the game I'm going to spawn
+spheres one after another to show the paths that the enemy spawner AI
+will populate the new enemy's PathController with.
