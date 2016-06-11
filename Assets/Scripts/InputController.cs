@@ -27,7 +27,6 @@ public class InputController : MonoBehaviour
 	private BombController bomb;
 
 	public bool controllerLook = true;
-	public bool isPaused;
 
 	void Start (){
 		game = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
@@ -37,21 +36,53 @@ public class InputController : MonoBehaviour
 	}
 
 	void Update (){
-		if (!isPaused) {
+		if (!GameController.Instance.IsPaused && !GameController.Instance.InMenus) {
 			if (player != null) {
 				SelfDestructCheck ();
-				SwapLookCheck ();
-				LookCheck ();
-
 				JumpCheck ();
 				MoveCheck ();
 
-				ShieldCheck ();
-				BombCheck ();
-				ShootCheck ();
+				if (weapon != null) {
+					SwapLookCheck ();
+					LookCheck ();
+					ShootCheck ();
+				}
+
+				if (shield != null)
+					ShieldCheck ();
+
+				if (bomb != null)
+					BombCheck ();
+
 			} else {
 				SpawnCheck ();
 			}
+		} else if (GameController.Instance.InMenus) {
+			// game hasn't started yet, read menu input
+			if (!GameController.Instance.gameUI.TitleMenuAnimator.GetBool ("MenuActive")) {
+				// how janky is this for any joystick button input?
+				// then again, not sure if it's needed - anyKey seems to work in the build
+
+				/*
+					 bool buttonPressed = false;
+					 for (int i = 0;i < 20; i++) {
+					     if(Input.GetKeyDown("joystick 1 button "+i)){
+					         buttonPressed = true;
+					     }
+					     if (buttonPressed)
+					     	break;
+				*/	 
+			
+				// any button iunput
+				if (Input.anyKey) {
+					GameController.Instance.gameUI.TitleMenuAnimator.SetBool ("MenuActive", true);
+				}
+			} else {
+				if (Input.GetKeyDown("2"))
+					GameController.Instance.gameUI.TitleMenuAnimator.SetBool ("MenuActive", false);
+			}
+		} else if (GameController.Instance.IsPaused) {
+			// game is paused
 		}
 	}
 
@@ -162,6 +193,15 @@ public class InputController : MonoBehaviour
 		if (Input.GetButtonDown (selfDestructInput)) {
 			GameObject AIGO = GameObject.FindGameObjectWithTag ("AI");
 			AIGO.GetComponent<EnemySpawnerIdea> ().canSpawn = !AIGO.GetComponent<EnemySpawnerIdea> ().canSpawn;
+		}
+	}
+
+	// this is kind of disgusting here but I made the PlayerController a singleton and it fucked with everything.
+	public void UpdateControllers(){
+		if (player != null) {
+			SetGunController (PlayerController.Instance.GetComponent<GunController> ());
+			SetShieldController (PlayerController.Instance.GetComponent<ShieldController> ());
+			SetBombController (PlayerController.Instance.GetComponent<BombController> ());
 		}
 	}
 

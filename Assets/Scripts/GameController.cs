@@ -3,9 +3,7 @@ using System.Collections;
 
 public class GameController : MonoBehaviour {
 
-	// learning how to make this motherfucker a singleton
-
-	#region SINGLETON PATTERN //what does this do?
+	#region SINGLETON PATTERN
 	//1. make a static instance.
 	public static GameController instance = null;
 
@@ -26,17 +24,45 @@ public class GameController : MonoBehaviour {
 	}
 	#endregion
 
-	private int score;								//really?
+	private int score;
 	public int Score {
 		get{ return score; }
 		set{ score += value; }
+	}
+
+	public int defaultLives = 3;
+	private int lives;
+	public int Lives{
+		get{ return lives; }
+		set{ lives += value; }
+	}
+
+	public int defaultBombs = 3;
+	private int bombs;
+	public int Bombs{
+		get { return bombs; }
+		set { bombs += value; }
+	}
+
+	private bool inMenus = true;
+	public bool InMenus{
+		get { return inMenus; }
+	}
+
+	private bool inGame = false;
+	public bool InGame{
+		get { return inGame; }
+	}
+
+	private bool isPaused = false;
+	public bool IsPaused{
+		get { return isPaused; }
 	}
 
 	public GameObject playerPrefab;					// prefab of the player to be spawned.
 	public Transform spawnPoint;					// trans of the spawn point.
 	[HideInInspector]
 	public GameObject player;						// instantiated player
-	public PlayerController playerPC;				// PlayerController for instantiated player
 
 	private bool spawnFlag = false;					// should we spawn the player?
 
@@ -44,33 +70,55 @@ public class GameController : MonoBehaviour {
 	// I think I need to modify how these scripts interact and follow the Inputcontroller model
 	public UIController gameUI;						// the UIController object to manage the UI
 
+	public Camera mainCamera;
+	private Animator mainCameraAnimator;
+
 	void Awake(){
 		ActivateSingleton ();
-	}
-
-	void Start () {
-		ResetScore ();
-
 		input = gameObject.GetComponent<InputController> ();
+		mainCameraAnimator = mainCamera.GetComponent<Animator> ();
 
 		if (input == null)
 			Debug.LogError ("Error: There is no InputController component on the GameController GameObject.");
-		
-		gameUI.TheGame = gameObject.GetComponent<GameController> ();
+
+		if (mainCameraAnimator == null)
+			Debug.LogError ("Error: There is no Animator on the Main Camera.");
+	}
+
+	void Start () {
+		// probably shouldn't be called yet
+		ResetGameState ();
 	}
 
 	void Update () {
 		if (spawnFlag) {
 			player = 
 				Instantiate(playerPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation) as GameObject;
-			playerPC = player.GetComponent<PlayerController> ();
-			input.SetPlayerController (playerPC);
+			input.SetPlayerController (PlayerController.Instance);
 			spawnFlag = false;
+			lives--;
 		}
+	}
+
+	void ResetGameState(){
+		ResetScore ();
+		lives = defaultLives;
+		bombs = defaultBombs;
 	}
 
 	void ResetScore(){
 		score = 0;
+	}
+
+	public void MenuToGameTransition(){
+		mainCameraAnimator.SetBool ("GameCamera", true);
+		inGame = true;
+		inMenus = false;
+		gameUI.GameUIAnimator.SetBool ("GameActive", true);
+	}
+
+	public void PauseFlip(){
+		isPaused = !isPaused;
 	}
 
 	public bool PlayerInstantiated(){
@@ -78,8 +126,9 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void SetSpawnFlag(){
-		if (!spawnFlag)
+		if (!spawnFlag && lives > 0) {
 			spawnFlag = true;
+		} 
 	}
 
 	// this is a little hacky, should probably be handled differently
@@ -87,5 +136,9 @@ public class GameController : MonoBehaviour {
 		if (player != null) {
 			player.GetComponent<PlayerController> ().Kill ();
 		}
+	}
+
+	public void QuitGame(){
+		Application.Quit ();
 	}
 }

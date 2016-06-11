@@ -136,8 +136,10 @@ public class EnemySpawnerIdea : MonoBehaviour
 	}
 
 	void ReferencePlayerTarget(){
-		if (playerTarget == null)
-			playerTarget = GameObject.FindGameObjectWithTag ("Player").GetComponent<Transform>();
+		if (playerTarget == null) {
+			if (PlayerController.Instance != null)
+				playerTarget = PlayerController.Instance.GetComponent<Transform> ();
+		}
 	}
 
 	void CalculateSpawnPos(EnemySpawnSide side = EnemySpawnSide.Right){

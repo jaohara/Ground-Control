@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour, IKillable, IDamageable, IHealable {
 
 	#region SINGLETON PATTERN
-	//make this class a singleton
 	public static PlayerController instance = null;
 	public static PlayerController Instance{
 		get{ return instance; }
@@ -28,7 +27,6 @@ public class PlayerController : MonoBehaviour, IKillable, IDamageable, IHealable
 
 	private float speed;					// current moving speed
 
-	public int lives = 3;					// number of player lives
 	public int health;						// player's current health
 	public int maxHealth;					// player's health max
 
@@ -58,25 +56,20 @@ public class PlayerController : MonoBehaviour, IKillable, IDamageable, IHealable
 	public float jumpThreshold;				// length of ray to check if grounded and able to jump
 	private bool fallOffCheck;				// will the vertical height be throttled due to jumpbuttonup?
 	private float fallOffValue;				// amount to cut vertical velocity to on jumpbuttonup
-	private float movementInputValue;		// value recorded from the horizontal axis this frame
 
 	//public accessors for InputController
 	public bool WillJump{get;set;}
 	public float MovementInputValue{ get; set; }
+	private float movementInputValue;
 	public bool Airborne{ get{return airborne;} }
 	public bool FallOffCheck{ get; set; }
 
 	private Material playerMaterial;		//this object's material
 	private Color baseColor;				// this object's albedo
 
-	private GameController theGame;
 	private InputController input;
 	private CameraShaker cameraShake;
 
-	//audio sources
-	//private AudioSource jumpSound;			// jumping sound effect
-	//private AudioSource landSound;			// landing sound effect
-	//private AudioSource walkSound;			// walking sound effect
 	[HideInInspector]
 	public AudioSource spawnSound;
 	[HideInInspector]
@@ -95,12 +88,9 @@ public class PlayerController : MonoBehaviour, IKillable, IDamageable, IHealable
 	}
 
 	void Start () {
+		Debug.Log ("PlayerStart()");
 		playerRb = GetComponent<Rigidbody> ();
 		playerTrans = GetComponent<Transform> ();
-		// this is tied to the order that I add the audiosources to the gameobject, might need retooling
-		//jumpSound = GetComponent<AudioSource> ();
-		//landSound = GetComponents<AudioSource> () [1];
-		//walkSound = GetComponents<AudioSource> () [2];
 
 		speed = .75f;
 		jumpPower = 1050.0f;
@@ -123,17 +113,17 @@ public class PlayerController : MonoBehaviour, IKillable, IDamageable, IHealable
 
 		cameraShake = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<CameraShaker> ();
 
-		theGame = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
-
-		if (theGame == null)
-			Debug.LogError ("PlayerController error: Couldn't find Game Controller!");
-
-		input = theGame.gameObject.GetComponent<InputController> ();
+		input = GameController.Instance.GetComponent<InputController> ();
+		Debug.Log ("Setting Controllers...");
 		input.SetGunController (playerGunController);
 		input.SetShieldController (playerShield);
 		input.SetBombController (playerBombs);
+		//input.UpdateControllers ();
+
+		Debug.Log ("Finished setting Controllers.");
 
 		GameObject audioObject = GameObject.FindGameObjectWithTag ("AudioController");
+		Debug.Log (audioObject);
 		if (audioObject != null) {
 			Debug.Log ("Found the audioObject!");
 			AudioSource[] audioSources = audioObject.GetComponents<AudioSource> ();
@@ -144,10 +134,14 @@ public class PlayerController : MonoBehaviour, IKillable, IDamageable, IHealable
 			shieldSound = audioSources [4];
 			bombSound = audioSources [5];
 			spawnSound.Play ();
+		} else {
+			Debug.Log ("Well, we never found the audioObject.");
 		}
 	}
 
 	void Update (){
+		Debug.Log ("Hello?");
+			
 		if (!isPaused) {
 			IsAirborne ();
 
@@ -158,8 +152,6 @@ public class PlayerController : MonoBehaviour, IKillable, IDamageable, IHealable
 	void FixedUpdate () {
 		Move ();
 		Jump ();
-
-		//IsMoving ();					// this is here for when I have the movement sound
 	}
 		
 	void Move () {
@@ -189,13 +181,12 @@ public class PlayerController : MonoBehaviour, IKillable, IDamageable, IHealable
 	}
 		
 	public void ModifyScore(int scoreDifferential){
-		theGame.Score = scoreDifferential;
+		GameController.Instance.Score = scoreDifferential;
 	}
 		
 	void OnCollisionEnter(Collision col){
 		// this older code is for sound and only for contact with an environment collider
 		if (!groundColliderContact && !airborne) {
-			//landSound.Play ();
 			groundColliderContact = true;
 		}
 	}
@@ -209,18 +200,7 @@ public class PlayerController : MonoBehaviour, IKillable, IDamageable, IHealable
 		Ray jumpRay = new Ray (playerTrans.position, Vector3.down);
 		airborne = !(Physics.Raycast (jumpRay, jumpThreshold));
 	}
-
-
-	//to be reused when sound is implemented
-	/*
-	void IsMoving (){
-		if (Mathf.Abs(playerRb.velocity.x) > 0 && !airborne)
-			walkSound.Play();
-		else 
-			walkSound.Pause();
-	}
-	*/
-
+		
 	// this should probably be part of the damageable interface or something
 	void ResetColor(){
 		playerMaterial.color = baseColor;
@@ -232,8 +212,8 @@ public class PlayerController : MonoBehaviour, IKillable, IDamageable, IHealable
 		Invoke ("ResetColor", 0.05f);
 	}
 
-	public void GainLife(int livesAdded){
-		lives += livesAdded;
+	public void ChangeLives(int livesAdded){
+		GameController.Instance.Lives = livesAdded;
 	}
 
 	public void Heal(int damageHealed){
@@ -265,33 +245,3 @@ public class PlayerController : MonoBehaviour, IKillable, IDamageable, IHealable
 		Destroy (gameObject);
 	}
 }
-
-
-/*
- * Graveyard of deprecated input methods - RIP
- */
-
-/*
-void MoveCheck(){
-	movementInputValue = Input.GetAxis ("Horizontal");
-}
-
-void JumpCheck(){
-	if (Input.GetButtonDown ("Jump") && !airborne)
-		willJump = true;
-
-	if (Input.GetButtonUp ("Jump") && airborne)
-		fallOffCheck = true;
-}
-
-void ShieldCheck(){
-	if (Input.GetButton ("Shield") && playerShield.power > 0) {
-		shieldActive = true;
-		Debug.Log ("Shield Held");
-		shieldObject.SetActive (true);
-	} else {
-		shieldActive = false;
-		Invoke ("DisableShieldEffect", shieldObject.GetComponent<ParticleSystem> ().duration);
-	}
-}
-*/

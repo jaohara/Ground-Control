@@ -4,9 +4,8 @@ using System.Collections.Generic;
 
 public class BombController : MonoBehaviour {
 
-	public int bombs = 0;
 	public int maxBombs = 5;
-	public float bombCoolDown = 5.0f;
+	public float bombCoolDown = 1.0f;
 
 	public GameObject explosionPrefab;
 
@@ -14,17 +13,16 @@ public class BombController : MonoBehaviour {
 	private bool bombArmed = true;
 
 	private CameraZoomer cameraZoom;
+	private Animator playerUIAC;
 
 	void Start () {
 		cameraZoom = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<CameraZoomer> ();
-
-		// make this not hard-coded
-		bombs = 3;
+		playerUIAC = GameObject.FindGameObjectWithTag ("PlayerStatusUI").GetComponent<Animator> ();
 	}
 
 	void Update () {
 		if (willExplode) {
-			if (bombs > 0 && bombArmed) {
+			if (GameController.Instance.Bombs > 0 && bombArmed) {
 				Explode ();
 				Invoke ("RearmBomb", bombCoolDown);
 			} 
@@ -52,7 +50,7 @@ public class BombController : MonoBehaviour {
 			}
 		}
 
-		bombs--;
+		GameController.Instance.Bombs = -1;
 		bombArmed = false;
 	}
 
@@ -63,10 +61,20 @@ public class BombController : MonoBehaviour {
 
 	public void RearmBomb(){
 		bombArmed = true;
+		if (playerUIAC != null && GameController.Instance.Bombs != 0) {
+			playerUIAC.SetBool ("BombActive", true);
+			Invoke ("ResetBombAnimation", 0.5f);
+		}
+	}
+
+	//this is pretty hacky, but my animation trigger isn't consistently working
+	public void ResetBombAnimation(){
+		if (playerUIAC != null)
+			playerUIAC.SetBool("BombActive", false);
 	}
 
 	public void AddBombs(int number){
-		if (bombs < maxBombs)
-			bombs += number;
+		if (GameController.Instance.Bombs < maxBombs)
+			GameController.Instance.Bombs = number;
 	}
 }
