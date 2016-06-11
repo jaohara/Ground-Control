@@ -1,11 +1,17 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/EnemySpawnerIdea.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/InputController.cs">
     <Files>
-      <File FileName="Assets/Scripts/InputController.cs" Line="132" Column="1" />
-      <File FileName="Assets/Scripts/EnemyNavigator.cs" Line="82" Column="68" />
-      <File FileName="Assets/Scripts/GCInterfaces.cs" Line="28" Column="45" />
-      <File FileName="Assets/Scripts/EnemySpawnerIdea.cs" Line="66" Column="41" />
+      <File FileName="Assets/Scripts/GameController.cs" Line="109" Column="24" />
+      <File FileName="Assets/CameraShaker.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/PlayerController.cs" Line="130" Column="9" />
+      <File FileName="Assets/Scripts/PickupController.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/UIController.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/ShieldController.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/EnemySpawnerIdea.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/InputController.cs" Line="63" Column="21" />
+      <File FileName="Assets/Scripts/BombController.cs" Line="64" Column="63" />
+      <File FileName="Assets/CanvasWobbler.cs" Line="12" Column="31" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

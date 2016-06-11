@@ -54,7 +54,7 @@ public class PickupController : MonoBehaviour, ICollectable {
 			DestroyWithEffect ();
 			break;
 		case PickupType.Life:
-			collector.GainLife (value);
+			collector.ChangeLives (value);
 			DestroyWithEffect();
 			break;
 		case PickupType.Score:
