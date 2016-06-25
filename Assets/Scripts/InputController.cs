@@ -18,6 +18,7 @@ public class InputController : MonoBehaviour
 	private const string shieldInput = "Shield";
 	private const string swapInput = "AimToggle";
 	private const string selfDestructInput = "SelfDestruct";
+	private const string pauseInput = "Pause";
 
 	// sub-controllers 
 	private GameController game;
@@ -36,27 +37,31 @@ public class InputController : MonoBehaviour
 	}
 
 	void Update (){
-		if (!GameController.Instance.IsPaused && !GameController.Instance.InMenus) {
-			if (player != null) {
-				SelfDestructCheck ();
-				JumpCheck ();
-				MoveCheck ();
+		if (!GameController.Instance.InMenus) {
+			if (!GameController.Instance.IsPaused) {
+				if (player != null) {
+					SelfDestructCheck ();
+					JumpCheck ();
+					MoveCheck ();
 
-				if (weapon != null) {
-					SwapLookCheck ();
-					LookCheck ();
-					ShootCheck ();
+					if (weapon != null) {
+						SwapLookCheck ();
+						LookCheck ();
+						ShootCheck ();
+					}
+
+					if (shield != null)
+						ShieldCheck ();
+
+					if (bomb != null)
+						BombCheck ();
+
+				} else {
+					SpawnCheck ();
 				}
+			} 
 
-				if (shield != null)
-					ShieldCheck ();
-
-				if (bomb != null)
-					BombCheck ();
-
-			} else {
-				SpawnCheck ();
-			}
+			PauseCheck ();
 		} else if (GameController.Instance.InMenus) {
 			// game hasn't started yet, read menu input
 			if (!GameController.Instance.gameUI.TitleMenuAnimator.GetBool ("MenuActive")) {
@@ -180,6 +185,12 @@ public class InputController : MonoBehaviour
 
 	public void SwapLookControl(){
 		controllerLook = !controllerLook;
+	}
+
+	void PauseCheck(){
+		if (Input.GetButtonDown (pauseInput)) {
+			GameController.Instance.PauseGame ();
+		}
 	}
 		
 	// this is just for debugging purposes

@@ -88,7 +88,6 @@ public class PlayerController : MonoBehaviour, IKillable, IDamageable, IHealable
 	}
 
 	void Start () {
-		Debug.Log ("PlayerStart()");
 		playerRb = GetComponent<Rigidbody> ();
 		playerTrans = GetComponent<Transform> ();
 
@@ -123,9 +122,9 @@ public class PlayerController : MonoBehaviour, IKillable, IDamageable, IHealable
 		Debug.Log ("Finished setting Controllers.");
 
 		GameObject audioObject = GameObject.FindGameObjectWithTag ("AudioController");
-		Debug.Log (audioObject);
+
 		if (audioObject != null) {
-			Debug.Log ("Found the audioObject!");
+			//Debug.Log ("Found the audioObject!");
 			AudioSource[] audioSources = audioObject.GetComponents<AudioSource> ();
 			spawnSound = audioSources [0];
 			damageSound = audioSources [1];
@@ -140,8 +139,6 @@ public class PlayerController : MonoBehaviour, IKillable, IDamageable, IHealable
 	}
 
 	void Update (){
-		Debug.Log ("Hello?");
-			
 		if (!isPaused) {
 			IsAirborne ();
 

@@ -45,11 +45,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\CameraShaker.cs" />
-     <Compile Include="Assets\CameraZoomer.cs" />
-     <Compile Include="Assets\CanvasWobbler.cs" />
      <Compile Include="Assets\Scripts\Blaster.cs" />
      <Compile Include="Assets\Scripts\BombController.cs" />
+     <Compile Include="Assets\Scripts\CameraShaker.cs" />
+     <Compile Include="Assets\Scripts\CameraZoomer.cs" />
+     <Compile Include="Assets\Scripts\CanvasWobbler.cs" />
      <Compile Include="Assets\Scripts\Destroyer.cs" />
      <Compile Include="Assets\Scripts\EnemyController.cs" />
      <Compile Include="Assets\Scripts\EnemyMovementPattern.cs" />

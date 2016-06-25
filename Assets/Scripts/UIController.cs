@@ -6,11 +6,15 @@ public class UIController : MonoBehaviour {
 
 	// Title Menu UI
 	[Header("Title Menu UI")]
-	public Animator TitleMenuAnimator;
+	public Animator TitleMenuAnimator;					// the animator for the title menu
+	public GameObject TitleMenu;						// object for the title menu
+	public GameObject TitleMenuDefault;					// gameobject for first selected title menu item
 
 	// in game UI 
 	[Header("In-Game UI")]
-	public Animator GameUIAnimator;
+	public Animator GameUIAnimator;						// the animator for the game ui
+	public GameObject PauseMenu;						// object for the pause menu
+	public GameObject PauseMenuDefault;					// gameobject for first selected pause menu item
 	public Text score;									// score text object
 	public Text health;									// health text object
 	public Text shield;									// shield power text object
@@ -48,7 +52,7 @@ public class UIController : MonoBehaviour {
 	}
 
 	void UpdateShield(){
-		if (GameAndPlayerExist())
+		if (GameAndPlayerExist() && PlayerController.Instance.playerShield != null)
 			shield.text = PlayerController.Instance.playerShield.power.ToString ();
 		else
 			shield.text = "---";

@@ -45,7 +45,7 @@ public class ShieldController : MonoBehaviour, IDamageable, IHealable {
 			RechargeShield ();
 		}
 
-		Debug.Log ("" + shieldActive + ": " + power);
+		//Debug.Log ("" + shieldActive + ": " + power);
 	}
 
 	public void DecayShield (){
